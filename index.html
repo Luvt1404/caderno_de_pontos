@@ -1,0 +1,745 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PontoFácil | Controle de Frequência</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="auth-screen active" id="auth-screen">
+
+        <div class="auth-card">
+            <span class="section-label">ACESSO RESTRITO</span>
+            <h2>Entrar no sistema</h2>
+
+            <form id="login-form">
+
+                <div class="input-group full">
+                    <label>Tipo de acesso</label>
+
+                    <select id="login-role">
+                        <option value="professor">Professor</option>
+                        <option value="vice">Vice-diretora</option>
+                    </select>
+                </div>
+
+                <div class="input-group full" id="login-professor-group">
+                    <label>Professor</label>
+
+                    <select id="login-professor">
+                        <option value="">Selecione o professor</option>
+                    </select>
+                </div>
+
+                <div class="input-group full">
+                    <label>Senha</label>
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="Digite a senha"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="primary-btn login-btn">
+                    Entrar
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+
+    <div class="app" style="display: none;">
+
+        <!-- MENU LATERAL -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">PF</div>
+
+                <div>
+                    <strong>PontoFácil</strong>
+                    <span>Controle Escolar</span>
+                </div>
+            </div>
+
+            <nav>
+
+                <button class="nav-btn active" data-page="dashboard">
+                    <span>01</span>
+                    Dashboard
+                </button>
+
+                <button class="nav-btn" data-page="professores">
+                    <span>02</span>
+                    Professores
+                </button>
+
+                <button class="nav-btn" data-page="frequencia">
+                    <span>03</span>
+                    Frequência
+                </button>
+
+                <button class="nav-btn" data-page="relatorios">
+                    <span>04</span>
+                    Relatórios
+                </button>
+
+                <button class="nav-btn" data-page="minhas-faltas">
+                    <span>05</span>
+                    Minhas faltas
+                </button>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="system-status">
+                    <div class="status-dot"></div>
+
+                    <div>
+                        <strong>Sistema ativo</strong>
+                        <small>Dados salvos localmente</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main">
+
+            <!-- TOPO -->
+            <header class="topbar">
+
+                <div>
+                    <span class="top-label">GESTÃO ESCOLAR</span>
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+
+                <div class="top-actions" id="top-actions">
+
+                    <div class="current-date" id="current-date">
+                        24/09/2026
+                    </div>
+
+                    <button type="button" class="secondary-btn" id="logout-btn">
+                        Sair
+                    </button>
+
+                    <button class="primary-btn" id="btn-registrar" onclick="abrirModalRegistro()">
+                        + Registrar frequência
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= DASHBOARD ================= -->
+
+            <section class="page active" id="dashboard">
+
+                <div class="welcome">
+
+                    <div>
+                        <span class="section-label">VISÃO GERAL</span>
+
+                        <h2>Controle de frequência</h2>
+
+                        <p>
+                            Acompanhe rapidamente a situação dos professores
+                            e os registros do período.
+                        </p>
+                    </div>
+
+                    <div class="welcome-date">
+                        <span id="dashboard-date"></span>
+                    </div>
+
+                </div>
+
+
+                <!-- CARDS -->
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Professores</span>
+                            <span class="stat-number" id="total-professores">0</span>
+                        </div>
+
+                        <div class="stat-description">
+                            Cadastrados no sistema
+                        </div>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Presentes hoje</span>
+                            <span class="stat-number success" id="presentes-hoje">0</span>
+                        </div>
+
+                        <div class="stat-description">
+                            Professores registrados
+                        </div>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Faltas hoje</span>
+                            <span class="stat-number danger" id="faltas-hoje">0</span>
+                        </div>
+
+                        <div class="stat-description">
+                            Faltas registradas
+                        </div>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Atrasos hoje</span>
+                            <span class="stat-number warning" id="atrasos-hoje">0</span>
+                        </div>
+
+                        <div class="stat-description">
+                            Registros de atraso
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- PAINEL PRINCIPAL -->
+
+                <div class="dashboard-grid">
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <span class="section-label">HOJE</span>
+                                <h3>Últimos registros</h3>
+                            </div>
+
+                            <button class="text-btn" onclick="mostrarPagina('frequencia')">
+                                Ver todos
+                            </button>
+
+                        </div>
+
+                        <div id="recent-records" class="table-wrapper">
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel quick-panel">
+
+                        <div class="panel-header">
+                            <div>
+                                <span class="section-label">ACESSO RÁPIDO</span>
+                                <h3>Ações</h3>
+                            </div>
+                        </div>
+
+                        <button class="quick-action" onclick="abrirModalProfessor()">
+                            <span class="quick-number">01</span>
+                            <div>
+                                <strong>Cadastrar professor</strong>
+                                <small>Adicionar um novo profissional</small>
+                            </div>
+                        </button>
+
+                        <button class="quick-action" onclick="abrirModalRegistro()">
+                            <span class="quick-number">02</span>
+                            <div>
+                                <strong>Registrar frequência</strong>
+                                <small>Registrar presença ou ocorrência</small>
+                            </div>
+                        </button>
+
+                        <button class="quick-action" onclick="mostrarPagina('relatorios')">
+                            <span class="quick-number">03</span>
+                            <div>
+                                <strong>Consultar relatório</strong>
+                                <small>Visualizar dados do período</small>
+                            </div>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= PROFESSORES ================= -->
+
+            <section class="page" id="professores">
+
+                <div class="section-header">
+
+                    <div>
+                        <span class="section-label">CADASTRO</span>
+                        <h2>Professores</h2>
+                        <p>Gerencie os profissionais cadastrados.</p>
+                    </div>
+
+                    <button class="primary-btn" onclick="abrirModalProfessor()">
+                        + Novo professor
+                    </button>
+
+                </div>
+
+
+                <div class="search-bar">
+
+                    <input
+                        type="text"
+                        id="search-professor"
+                        placeholder="Pesquisar professor..."
+                        oninput="renderProfessores()"
+                    >
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div id="professors-list" class="professors-list">
+                    </div>
+
+                </div>
+
+                <div class="panel request-panel" style="margin-top: 20px;">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">APROVAÇÃO</span>
+                            <h3>Solicitações de ausência</h3>
+                        </div>
+                    </div>
+
+                    <div id="administracao-faltas" class="request-list"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================= MINHAS FALTAS ================= -->
+
+            <section class="page" id="minhas-faltas">
+
+                <div class="section-header">
+
+                    <div>
+                        <span class="section-label">PROFESSOR</span>
+                        <h2>Minhas faltas</h2>
+                        <p>Solicite dias de ausência e acompanhe a resposta.</p>
+                    </div>
+
+                </div>
+
+                <div class="panel request-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">SOLICITAÇÃO</span>
+                            <h3>Registrar falta</h3>
+                        </div>
+                    </div>
+
+                    <form id="solicitacao-form" class="request-form">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Data da ausência</label>
+                                <input type="date" id="solicitacao-data" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Motivo</label>
+                                <select id="solicitacao-motivo" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Doença">Doença</option>
+                                    <option value="Compromisso pessoal">Compromisso pessoal</option>
+                                    <option value="Férias">Férias</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group full">
+                                <label>Observação</label>
+                                <textarea id="solicitacao-observacao" placeholder="Descreva o motivo e as informações relevantes"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-actions">
+                            <button type="submit" class="primary-btn">Enviar solicitação</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="panel request-panel" style="margin-top: 20px;">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">HISTÓRICO</span>
+                            <h3>Solicitações enviadas</h3>
+                        </div>
+                    </div>
+
+                    <div id="professor-request-list" class="request-list"></div>
+                </div>
+
+            </section>
+
+
+            <!-- ================= FREQUÊNCIA ================= -->
+
+            <section class="page" id="frequencia">
+
+                <div class="section-header">
+
+                    <div>
+                        <span class="section-label">REGISTROS</span>
+                        <h2>Frequência</h2>
+                        <p>Consulte e gerencie os registros dos professores.</p>
+                    </div>
+
+                    <button class="primary-btn" onclick="abrirModalRegistro()">
+                        + Novo registro
+                    </button>
+
+                </div>
+
+
+                <div class="filters">
+
+                    <div class="filter-group">
+                        <label>Professor</label>
+
+                        <select id="filter-professor" onchange="renderFrequencia()">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+
+                    <div class="filter-group">
+                        <label>Data inicial</label>
+
+                        <input
+                            type="date"
+                            id="filter-start"
+                            onchange="renderFrequencia()"
+                        >
+                    </div>
+
+
+                    <div class="filter-group">
+                        <label>Data final</label>
+
+                        <input
+                            type="date"
+                            id="filter-end"
+                            onchange="renderFrequencia()"
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div id="frequency-table" class="table-wrapper">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= RELATÓRIOS ================= -->
+
+            <section class="page" id="relatorios">
+
+                <div class="section-header">
+
+                    <div>
+                        <span class="section-label">ANÁLISE</span>
+                        <h2>Relatórios</h2>
+                        <p>Resumo das ocorrências e descontos estimados.</p>
+                    </div>
+
+                    <button class="secondary-btn" onclick="window.print()">
+                        Imprimir relatório
+                    </button>
+
+                </div>
+
+
+                <div class="report-filters">
+
+                    <div>
+                        <label>Mês</label>
+
+                        <input
+                            type="month"
+                            id="report-month"
+                            onchange="renderRelatorio()"
+                        >
+                    </div>
+
+                </div>
+
+
+                <div id="report-content">
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= MODAL PROFESSOR ================= -->
+
+    <div class="modal-overlay" id="modal-professor">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <span class="section-label">CADASTRO</span>
+                    <h2>Novo professor</h2>
+                </div>
+
+                <button class="close-btn" onclick="fecharModais()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="professor-form">
+
+                <div class="form-grid">
+
+                    <div class="input-group full">
+                        <label>Nome completo</label>
+
+                        <input
+                            type="text"
+                            id="professor-nome"
+                            placeholder="Digite o nome completo"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="input-group">
+                        <label>Salário base</label>
+
+                        <input
+                            type="number"
+                            id="professor-salario"
+                            placeholder="0,00"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="input-group">
+                        <label>Carga horária semanal</label>
+
+                        <input
+                            type="number"
+                            id="professor-carga"
+                            placeholder="Ex.: 40"
+                            min="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group full">
+                        <label>Senha de acesso</label>
+
+                        <input
+                            type="password"
+                            id="professor-senha"
+                            placeholder="Crie uma senha para o professor"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="fecharModais()"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="primary-btn">
+                        Salvar professor
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= MODAL FREQUÊNCIA ================= -->
+
+    <div class="modal-overlay" id="modal-registro">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+                    <span class="section-label">FREQUÊNCIA</span>
+                    <h2>Novo registro</h2>
+                </div>
+
+                <button class="close-btn" onclick="fecharModais()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="registro-form">
+
+                <div class="form-grid">
+
+                    <div class="input-group full">
+                        <label>Professor</label>
+
+                        <select id="registro-professor" required>
+                            <option value="">Selecione o professor</option>
+                        </select>
+                    </div>
+
+
+                    <div class="input-group">
+                        <label>Data</label>
+
+                        <input
+                            type="date"
+                            id="registro-data"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="input-group">
+                        <label>Situação</label>
+
+                        <select id="registro-status" required>
+                            <option value="Presente">Presente</option>
+                            <option value="Falta">Falta</option>
+                            <option value="Atraso">Atraso</option>
+                            <option value="Saída antecipada">Saída antecipada</option>
+                            <option value="Falta justificada">Falta justificada</option>
+                        </select>
+                    </div>
+
+
+                    <div class="input-group">
+                        <label>Horas não trabalhadas</label>
+
+                        <input
+                            type="number"
+                            id="registro-horas"
+                            placeholder="Ex.: 2"
+                            min="0"
+                            step="0.5"
+                            value="0"
+                        >
+                    </div>
+
+
+                    <div class="input-group">
+                        <label>Minutos de atraso</label>
+
+                        <input
+                            type="number"
+                            id="registro-minutos"
+                            placeholder="Ex.: 15"
+                            min="0"
+                            value="0"
+                        >
+                    </div>
+
+
+                    <div class="input-group full">
+                        <label>Observação</label>
+
+                        <textarea
+                            id="registro-observacao"
+                            placeholder="Adicione uma observação, se necessário..."
+                        ></textarea>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="fecharModais()"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="primary-btn">
+                        Salvar registro
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+```

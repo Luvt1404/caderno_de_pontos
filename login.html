@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PontoFácil | Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-page">
+        <div class="auth-card">
+            <span class="section-label">ACESSO RESTRITO</span>
+            <h2>Entrar no sistema</h2>
+
+            <form id="login-form">
+                <div class="input-group full">
+                    <label>Tipo de acesso</label>
+                    <select id="login-role">
+                        <option value="professor">Professor</option>
+                        <option value="vice">Vice-diretora</option>
+                        <option value="diretor">Diretor</option>
+                    </select>
+                </div>
+
+                <div class="input-group full">
+                    <label>Senha</label>
+                    <input type="password" id="login-password" placeholder="Digite a sua senha" required>
+                </div>
+
+                <button type="submit" class="primary-btn login-btn">Entrar</button>
+            </form>
+
+            <div class="modal-actions" style="margin-top: 16px; display: grid; gap: 10px;">
+                <button type="button" class="secondary-btn" id="open-register-professor">
+                    Cadastrar professor
+                </button>
+                <button type="button" class="secondary-btn" id="open-register-admin">
+                    Cadastrar diretor / vice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-admin">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <span class="section-label">ACESSO</span>
+                    <h2>Cadastro administrativo</h2>
+                </div>
+                <button class="close-btn" type="button" onclick="fecharModais()">×</button>
+            </div>
+
+            <form id="admin-form">
+                <div class="form-grid">
+                    <div class="input-group full">
+                        <label>Cargo</label>
+                        <select id="admin-role" required>
+                            <option value="">Selecione</option>
+                            <option value="diretor">Diretor</option>
+                            <option value="vice">Vice-diretora</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group full">
+                        <label>Nome do responsável</label>
+                        <input type="text" id="admin-nome" placeholder="Digite o nome do responsável" required>
+                    </div>
+
+                    <div class="input-group full">
+                        <label>Senha de acesso</label>
+                        <input type="password" id="admin-senha" placeholder="Crie uma senha para o cargo" required>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="fecharModais()">Cancelar</button>
+                    <button type="submit" class="primary-btn">Salvar acesso</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-professor">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <span class="section-label">CADASTRO</span>
+                    <h2>Novo professor</h2>
+                </div>
+                <button class="close-btn" type="button" onclick="fecharModais()">×</button>
+            </div>
+
+            <form id="professor-form">
+                <div class="form-grid">
+                    <div class="input-group full">
+                        <label>Nome completo</label>
+                        <input type="text" id="professor-nome" placeholder="Digite o nome completo" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Salário base</label>
+                        <input type="number" id="professor-salario" placeholder="0,00" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Carga horária semanal</label>
+                        <input type="number" id="professor-carga" placeholder="Ex.: 40" min="1" required>
+                    </div>
+
+                    <div class="input-group full">
+                        <label>Senha de acesso</label>
+                        <input type="password" id="professor-senha" placeholder="Crie uma senha para o professor" required>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" onclick="fecharModais()">Cancelar</button>
+                    <button type="submit" class="primary-btn">Salvar professor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
